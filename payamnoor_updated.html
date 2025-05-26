@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>محاسبه نمره نهایی پیام نور</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      direction: rtl;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      background-color: #f9f0f9;
+    }
+    input, button, select {
+      font-size: 16px;
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>محاسبه‌گر نمره نهایی پیام نور</h2>
+  <label>نمره پایان‌ترم (از 12)</label>
+  <input type="number" id="final" min="0" max="12" step="0.01" />
+
+  <label>نمره میان‌ترم (از 8)</label>
+  <input type="number" id="midterm" min="0" max="8" step="0.01" />
+
+  <label>نمره عملی (در صورت وجود، درج از 20)</label>
+  <input type="number" id="practical" min="0" max="20" step="0.01" />
+
+  <button onclick="calculate()">محاسبه نمره نهایی</button>
+
+  <div class="result" id="output"></div>
+
+  <script>
+    function calculate() {
+      const final = parseFloat(document.getElementById('final').value);
+      const midterm = parseFloat(document.getElementById('midterm').value);
+      const practical = parseFloat(document.getElementById('practical').value);
+      let resultText = '';
+
+      if (isNaN(final)) {
+        resultText = 'لطفا نمره پایان‌ترم را وارد کنید';
+      } else {
+        let withMid = isNaN(midterm) ? 0 : midterm + final;
+        let withoutMid = final * 10 / 6;
+        let mainScore = Math.max(withMid, withoutMid);
+
+        if (!isNaN(practical)) {
+          mainScore = ((mainScore * 2) + practical) / 3;
+        }
+
+        // اعمال قانون گرد کردن نمره برای کارشناسی
+        let roundedScore = mainScore;
+        if (mainScore >= 9.5 && mainScore < 10) {
+          roundedScore = 10;
+        }
+
+        resultText = `نمره نهایی شما: ${roundedScore.toFixed(2)} ${roundedScore === 20 ? '✅ (درس خودخوان)' : (roundedScore >= 10 ? '✅ (قبول)' : '❌ (مردود)')}`;
+      }
+
+      document.getElementById('output').innerText = resultText;
+    }
+  </script>
+</body>
+</html>
